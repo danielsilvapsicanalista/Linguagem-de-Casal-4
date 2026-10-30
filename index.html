@@ -547,8 +547,24 @@
       const daysToAnniversary = useMemo(() => getDaysUntilDate(anniversaryDate), [anniversaryDate]);
       const daysToValentines = useMemo(() => getDaysUntilDate('2025-06-12'), []);
 
+      // Navegação rápida global para alternar entre qualquer tela
+      const navigateTo = (tab) => {
+        if (tab === 'home') {
+          setIsStarted(false);
+          setIsCompleted(false);
+        } else if (tab === 'quiz_p1') {
+          startTestForRole('person1');
+        } else if (tab === 'quiz_p2') {
+          startTestForRole('person2');
+        } else {
+          setIsStarted(false);
+          setIsCompleted(true);
+          setActiveTab(tab);
+        }
+      };
+
       return (
-        <div className="bg-white rounded-3xl shadow-xl border border-slate-200/80 overflow-hidden text-slate-800">
+        <div className="bg-white rounded-3xl shadow-xl border border-slate-200/80 overflow-hidden text-slate-800 pb-20 sm:pb-24">
           
           {/* CABEÇALHO DO APP COM LOGO DA LINGUAGEM DE CASAL */}
           <header className="bg-gradient-to-r from-pink-600 via-rose-500 to-purple-600 text-white p-5 sm:p-6 text-center space-y-2 relative">
@@ -1638,6 +1654,85 @@
               </a>
             </div>
           </footer>
+
+          {/* BARRA DE NAVEGAÇÃO FIXA / MENU ACESSÍVEL (STICKY BOTTOM NAV) */}
+          <nav className="fixed bottom-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-md text-white border-t border-slate-800 px-2 py-1.5 shadow-2xl">
+            <div className="max-w-4xl mx-auto flex items-center justify-around text-center">
+              
+              <button
+                onClick={() => navigateTo('home')}
+                className={`flex flex-col items-center py-1 px-2 rounded-xl transition-all ${
+                  !isStarted && !isCompleted 
+                    ? 'text-pink-400 font-bold scale-105' 
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <span className="text-base sm:text-lg">🏠</span>
+                <span className="text-[10px] leading-tight">Início</span>
+              </button>
+
+              <button
+                onClick={() => navigateTo(currentUserRole === 'person1' ? 'quiz_p1' : 'quiz_p2')}
+                className={`flex flex-col items-center py-1 px-2 rounded-xl transition-all ${
+                  isStarted 
+                    ? 'text-pink-400 font-bold scale-105' 
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <span className="text-base sm:text-lg">✍️</span>
+                <span className="text-[10px] leading-tight">Teste</span>
+              </button>
+
+              <button
+                onClick={() => navigateTo('comparison')}
+                className={`flex flex-col items-center py-1 px-2 rounded-xl transition-all ${
+                  isCompleted && activeTab === 'comparison' 
+                    ? 'text-pink-400 font-bold scale-105' 
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <span className="text-base sm:text-lg">👩‍❤️‍👨</span>
+                <span className="text-[10px] leading-tight">Relatório</span>
+              </button>
+
+              <button
+                onClick={() => navigateTo('answers')}
+                className={`flex flex-col items-center py-1 px-2 rounded-xl transition-all ${
+                  isCompleted && activeTab === 'answers' 
+                    ? 'text-pink-400 font-bold scale-105' 
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <span className="text-base sm:text-lg">📋</span>
+                <span className="text-[10px] leading-tight">Respostas</span>
+              </button>
+
+              <button
+                onClick={() => navigateTo('missions')}
+                className={`flex flex-col items-center py-1 px-2 rounded-xl transition-all ${
+                  isCompleted && activeTab === 'missions' 
+                    ? 'text-pink-400 font-bold scale-105' 
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <span className="text-base sm:text-lg">🎯</span>
+                <span className="text-[10px] leading-tight">Missões</span>
+              </button>
+
+              <button
+                onClick={() => navigateTo('dates')}
+                className={`flex flex-col items-center py-1 px-2 rounded-xl transition-all ${
+                  isCompleted && activeTab === 'dates' 
+                    ? 'text-pink-400 font-bold scale-105' 
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <span className="text-base sm:text-lg">📅</span>
+                <span className="text-[10px] leading-tight">Datas</span>
+              </button>
+
+            </div>
+          </nav>
 
         </div>
       );
